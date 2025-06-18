@@ -4,7 +4,7 @@ from openai import OpenAI
 
 app = Flask(__name__)
 
-# Initialize OpenAI client with your API key from environment variable
+# Initialize OpenAI client with environment variable
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 @app.route("/")
@@ -22,7 +22,7 @@ def webhook():
         return jsonify({"error": "No message received"}), 400
 
     try:
-        # Make request to OpenAI API
+        # Send message to OpenAI and get response
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
