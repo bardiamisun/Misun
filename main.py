@@ -3,8 +3,6 @@ import os
 from openai import OpenAI
 
 app = Flask(__name__)
-
-# Initialize OpenAI client with environment variable
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 @app.route("/")
@@ -14,7 +12,6 @@ def home():
 @app.route("/webhook", methods=["POST"])
 def webhook():
     data = request.get_json()
-
     message = data.get("message", "")
     username = data.get("username", "")
 
@@ -22,16 +19,12 @@ def webhook():
         return jsonify({"error": "No message received"}), 400
 
     try:
-        # Send message to OpenAI and get response
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
-            messages=[
-                {"role": "user", "content": f"{username} says: {message}"}
-            ]
+            messages=[{"role": "user", "content": f"{username} says: {message}"}]
         )
         reply = response.choices[0].message.content.strip()
         return jsonify({"reply": reply})
-
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
